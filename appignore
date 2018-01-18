@@ -11,3 +11,8 @@ gradle/
 gradle.properties
 *.apk
 .svn
+
+
+logcat正则表达式
+过滤log
+^(?!.*(System.|CubicBezierInterpolator)).*$
