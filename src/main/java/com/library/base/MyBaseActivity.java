@@ -62,7 +62,7 @@ import rx.Subscriber;
  */
 
 public abstract class MyBaseActivity extends IBaseActivity implements ProgressLayout.OnAgainInter, View.OnClickListener, LoadMoreAdapter.OnLoadMoreListener {
-    private final String TAG=this.getClass().getSimpleName();
+    protected final String TAG=this.getClass().getSimpleName();
     /*************************************************/
     protected NestedScrollView nsv;
     protected Toolbar toolbar;
