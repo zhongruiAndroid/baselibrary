@@ -7,7 +7,7 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:navigationBarColor">@color/transparent_half</item>
         <item name="android:editTextStyle">@style/editTextStyle</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/app_text_size</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
@@ -21,8 +21,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
-
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/app_text_size</item>
     </style>
     <style name="radio_home">
         <item name="android:layout_width">0dp</item>

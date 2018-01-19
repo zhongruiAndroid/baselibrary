@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/app_text_size</item>
         <item name="android:editTextStyle">@style/editTextStyle</item>
     </style>
 
@@ -14,7 +14,7 @@
     <style name="AppTheme.NoActionBar" >
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/app_text_size</item>
         <item name="android:textColor">@color/colorText</item>
         <!--<item name="android:textCursorDrawable">@drawable/cursor_color</item>&lt;!&ndash;光标颜色&ndash;&gt;-->
         <item name="android:editTextStyle">@style/editTextStyle</item>
@@ -29,7 +29,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/app_text_size</item>
     </style>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
     <style name="radio_home">
