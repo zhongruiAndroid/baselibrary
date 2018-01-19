@@ -11,13 +11,13 @@ gradle/
 gradle.properties
 *.apk
 .svn
-<<<<<<< HEAD
+
 gradlew
 gradlew.bat
-=======
+
 
 
 logcat正则表达式
 过滤log
 ^(?!.*(System.|CubicBezierInterpolator)).*$
->>>>>>> 74aedf733c6f90f6fa257a63c4873f1bd5203981
+
