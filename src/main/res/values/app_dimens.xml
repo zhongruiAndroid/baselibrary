@@ -4,6 +4,6 @@
     <dimen name="asterisk_padding">8dp</dimen>
     <dimen name="edit_default_height">35dp</dimen>
     <dimen name="app_title_height">48dp</dimen>
-    <dimen name="app_text_size">14sp</dimen>
+    <dimen name="app_text_size">13sp</dimen>
     <dimen name="size_commit">16sp</dimen>
 </resources>

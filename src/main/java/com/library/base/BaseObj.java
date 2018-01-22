@@ -12,6 +12,15 @@ public class BaseObj implements Serializable {
     private String url;//上传文件返回路径
     private String img;//上传图片返回路径
     private int is_check;//首页是否有未读消息、是否有红点(1有 0无)
+    private String card_id;//添加信用卡发短信返回card_id
+
+    public String getCard_id() {
+        return card_id;
+    }
+
+    public void setCard_id(String card_id) {
+        this.card_id = card_id;
+    }
 
     public int getIs_check() {
         return is_check;
