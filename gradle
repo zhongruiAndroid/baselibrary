@@ -1,0 +1,155 @@
+apply plugin: 'com.android.application'
+def getAppVersionName(){
+    return "2.0.2"
+}
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 21
+        versionCode 18
+        versionName getAppVersionName()
+    }
+    signingConfigs {
+        debug {
+            storeFile file("dameile.jks")
+            storePassword "123456"
+            keyAlias "dameile"
+            keyPassword "123456"
+        }
+        release {
+            keyAlias '上海达美乐比萨有限公司'
+            keyPassword 'domino'
+            storeFile file('Dominos.keystore')
+            storePassword 'domino'
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-rules.pro'
+
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs "libs"
+        }
+    }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+    flavorDimensions 'huanjing', 'qd'
+    productFlavors {
+        qh360{
+            flavorDimension 'qd'
+            manifestPlaceholders.put("qudao","qh360")
+        }
+        kuan{
+            flavorDimension 'qd'
+            manifestPlaceholders.put("qudao","kuan")
+        }
+        xiaomi{
+            flavorDimension 'qd'
+            manifestPlaceholders.put("qudao","xiaomi")
+        }
+        baidu{
+            flavorDimension 'qd'
+            manifestPlaceholders.put("qudao","baidu")
+        }
+        wandoujia{
+            flavorDimension 'qd'
+            manifestPlaceholders.put("qudao","wandoujia")
+        }
+        qq{
+            flavorDimension 'qd'
+            manifestPlaceholders.put("qudao","qq")
+        }
+        kaifa{
+            flavorDimension 'huanjing'
+            manifestPlaceholders.put("qudao","qh360")
+            manifestPlaceholders.put("version_Name",getAppVersionName())
+            applicationId 'com.zizhe.dominos.app'
+            buildConfigField("String", "wapUrl", "\"ecapitest.dominos.com.cn\"")
+            buildConfigField("String", "url", "\"ecapitest.dominos.com.cn\"")
+            buildConfigField("String", "basePort","\"\"")
+            buildConfigField("String", "mMode","\"00\"")
+            buildConfigField("String", "baidu_push_key","\"LNVbfGRQqkH2mUGtFBWs169o\"")
+            manifestPlaceholders.put("baidu_push_key","LNVbfGRQqkH2mUGtFBWs169o")
+            manifestPlaceholders.put("baidu_map_key","mIoGxzGY5MNbZkcMi5tOzvTTvYYd0dYL")
+        }
+        uat{
+            flavorDimension 'huanjing'
+            manifestPlaceholders.put("qudao","qh360")
+            manifestPlaceholders.put("version_Name",getAppVersionName())
+            applicationId 'com.zizhe.dominos.app'
+            buildConfigField("String", "wapUrl", "\"http://necwapuat.dominos.com.cn\"")
+            buildConfigField("String", "url", "\"necapiuat.dominos.com.cn\"")
+            buildConfigField("String", "basePort", "\"\"")
+            buildConfigField("String", "mMode","\"00\"")
+            buildConfigField("String", "baidu_push_key","\"LNVbfGRQqkH2mUGtFBWs169o\"")
+            manifestPlaceholders.put("baidu_push_key","LNVbfGRQqkH2mUGtFBWs169o")
+            manifestPlaceholders.put("baidu_map_key","mIoGxzGY5MNbZkcMi5tOzvTTvYYd0dYL")
+        }
+        shengchan {
+            flavorDimension 'huanjing'
+            manifestPlaceholders.put("version_Name",getAppVersionName())
+            applicationId 'cn.dominos.pizza'
+            buildConfigField("String", "wapUrl", "\"http://api1.dominos.com.cn:8001\"")
+            buildConfigField("String", "url", "\"api1.dominos.com.cn\"")
+            buildConfigField("String", "basePort", "\":8001\"")
+            buildConfigField("String", "mMode","\"00\"")
+            buildConfigField("String", "baidu_push_key","\"R23HqWed4bMZ02wgsA5GYYCt\"")
+            manifestPlaceholders.put("baidu_push_key","R23HqWed4bMZ02wgsA5GYYCt")
+            manifestPlaceholders.put("baidu_map_key","WYgeLNsV1Dy0eRXmoWSNzsaibKgCAd0k")
+        }
+
+    }
+}
+
+dependencies {
+
+    //    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    //    compile 'com.android.support:appcompat-v7:23.4.0'
+
+    //    compile 'com.android.support:appcompat-v7:22.1.1'
+
+    //    compile files('libs/gson-2.3.1.jar')
+    compile files('libs/Volley.jar')
+    compile files('libs/pushservice-5.2.0.12.jar')
+    compile files('libs/AMap_Location_V3.0.0_20160922.jar')
+    compile files('libs/alipaySdk-20160812.jar')
+    compile files('libs/libammsdk.jar')
+    compile files('libs/open_sdk_r5756.jar')
+    compile files('libs/sun.misc.BASE64Decoder.jar')
+    compile files('libs/universal-image-loader-1.9.5.jar')
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    testCompile 'junit:junit:4.12'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile(name: 'retrofitutil', ext: 'aar')
+    compile(name: 'fastShape', ext: 'aar')
+    compile files('libs/BaiduLBS_Android.jar')
+    compile files('libs/UPPayAssistEx.jar')
+    compile files('libs/UPPayPluginExPro.jar')
+    compile files('libs/GridsumWebDissector.jar')
+}

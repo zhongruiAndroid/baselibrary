@@ -84,7 +84,7 @@ public abstract class MyBaseFragment extends IBaseFragment implements View.OnCli
         if(null!=view.findViewById(R.id.pcfl_refresh)){
             pcfl = (PtrClassicFrameLayout) view.findViewById(R.id.pcfl_refresh);
             pcfl.setLastUpdateTimeRelateObject(this);
-            pcfl.disableWhenHorizontalMove(true);
+//            pcfl.disableWhenHorizontalMove(true);
             pcfl.setYOffsetMultiple(3);
             pcfl.setXOffsetMultiple(3);
             pcfl.setScaledTouchMultiple(0.5f);
