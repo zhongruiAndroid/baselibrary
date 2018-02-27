@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -32,7 +33,7 @@ import android.widget.TextView;
 
 import com.github.androidtools.ClickUtils;
 import com.github.androidtools.PhoneUtils;
-import com.github.androidtools.StatusBarUtil;
+import com.github.androidtools.StatusBarUtils;
 import com.github.androidtools.inter.MyOnClickListener;
 import com.github.baseclass.BaseDividerListItem;
 import com.github.baseclass.activity.IBaseActivity;
@@ -163,7 +164,7 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
         }
     }
 
-    public void setAppRightImg(int appRightImg) {
+    public void setAppRightImg(@DrawableRes  int appRightImg) {
         this.appRightImg = appRightImg;
         if (app_right_iv != null && appRightImg != 0) {
             app_right_iv.setImageResource(appRightImg);
@@ -204,7 +205,7 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
         mContext = this;
         if (getContentView() != 0) {
             setContentView(getContentView());
-            StatusBarUtil.setColor(this,ContextCompat.getColor(mContext,R.color.app_status),0);
+            StatusBarUtils.setColor(this,ContextCompat.getColor(mContext,R.color.app_status),0);
 //            View rootView = ((ViewGroup) this.findViewById(android.R.id.content))
 //                    .getChildAt(0);
 //            int navigationBarHeight = PhoneUtils.getNavigationBarHeight(mContext);
@@ -271,16 +272,19 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
         if (null != findViewById(R.id.app_right_iv)) {
             app_right_iv = (ImageView) findViewById(R.id.app_right_iv);
         }
-        if (appRightImg != 0) {
+        if (appRightImg != 0&&app_right_iv!=null) {
             app_right_iv.setImageResource(appRightImg);
-
-            app_right_tv.setVisibility(View.GONE);
+            if(app_right_tv!=null){
+                app_right_tv.setVisibility(View.GONE);
+            }
             app_right_iv.setVisibility(View.VISIBLE);
         }
         if (appRightTitle != null) {
             app_right_tv.setText(appRightTitle);
             app_right_tv.setVisibility(View.VISIBLE);
-            app_right_iv.setVisibility(View.GONE);
+            if(app_right_iv!=null){
+                app_right_iv.setVisibility(View.GONE);
+            }
             if (appRightTitleColor != 0) {
                 app_right_tv.setTextColor(ContextCompat.getColor(mContext,appRightTitleColor));
             }
@@ -323,7 +327,7 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
         initData();
     }
 
-    protected void setBackIcon(int resId) {
+    protected void setBackIcon(@DrawableRes int resId) {
         navigationIcon = resId;
     }
 

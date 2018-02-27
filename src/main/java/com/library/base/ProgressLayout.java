@@ -3,6 +3,7 @@ package com.library.base;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.LayoutRes;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -24,7 +25,10 @@ import java.util.List;
 public class ProgressLayout extends RelativeLayout {
     public View againView;
     public TextView tv_load_error_msg;
-
+    private static int loadView=R.layout.app_loading_view;
+    public static void setLoadView(@LayoutRes int loadView) {
+        ProgressLayout.loadView = loadView;
+    }
     public interface OnAgainInter {
         void again();
     }
@@ -70,7 +74,7 @@ public class ProgressLayout extends RelativeLayout {
         // if progressBackground color == Color.TRANSPARENT just add progress bar
         if (backgroundColor == Color.TRANSPARENT) {
 //            mProgressView = new ProgressBar(getContext());
-            View inflate = LayoutInflater.from(getContext()).inflate(R.layout.app_loading_view, null);
+            View inflate = LayoutInflater.from(getContext()).inflate(loadView, null);
             mProgressView=inflate;
             layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParams.addRule(CENTER_IN_PARENT);
@@ -87,7 +91,7 @@ public class ProgressLayout extends RelativeLayout {
 
             ProgressBar progressBar = new ProgressBar(getContext());
 //            View inflate = LayoutInflater.from(getContext()).inflate(R.layout.app_load_view, null);
-            View inflate = LayoutInflater.from(getContext()).inflate(R.layout.app_loading_view, null);
+            View inflate = LayoutInflater.from(getContext()).inflate(loadView, null);
             linearLayout.addView(inflate);
 
             mProgressView = linearLayout;

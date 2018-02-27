@@ -5,7 +5,7 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:navigationBarColor">@color/transparent_half</item>
+        <item name="android:navigationBarColor">@color/white</item>
         <item name="android:editTextStyle">@style/editTextStyle</item>
         <item name="android:textSize">@dimen/app_text_size</item>
     </style>

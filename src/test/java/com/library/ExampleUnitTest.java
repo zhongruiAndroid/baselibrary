@@ -1,6 +1,14 @@
 package com.library;
 
+import com.library.base.tools.LunarUtils;
+import com.library.base.tools.has.Lunar;
+import com.library.base.tools.has.LunarSolar;
+import com.library.base.tools.has.Solar;
+
 import org.junit.Test;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +23,38 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
+    @Test
+    public void rili() throws Exception {
+        Solar solar = new Solar();
+        solar.solarYear = 2001;
+        solar.solarMonth = 5;
+        solar.solarDay = 23;
+        System.out.println("solar:"+solar.toString());
+
+
+        LunarSolar lunarSolar = new LunarSolar();
+        Lunar lunar = lunarSolar.SolarToLunar(solar);
+        System.out.println(lunar.isleap+"lunar:"+lunar.toString());
+
+
+        lunar.lunarYear = lunar.lunarYear+1;
+//        lunar.isleap = false;
+        Solar new_solar = lunarSolar.LunarToSolar(lunar);
+        System.out.println("new_lunar:"+lunar.toString());
+        System.out.println("new_solar:"+new_solar.toString());
+    }
+    public void affdsfsdfsd() throws Exception {
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(new Date());
+        LunarUtils a=new LunarUtils(calendar);
+        System.out.println(a.animalsYear());
+        System.out.println(a.cyclical());
+        System.out.println(a.get_Big_Or_Small());
+        System.out.println(a.get_date());
+        System.out.println(a.get_month());
+        System.out.println(a.numeric_md());
+        System.out.println(a.toString());
+    }
     @Test
     public void afsdfsd() throws Exception {
         String a="asdfsf.gd.54.";
