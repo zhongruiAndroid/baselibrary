@@ -13,4 +13,3 @@ gradle.properties
 .svn
 gradlew
 gradlew.bat
-app_loading.xml
