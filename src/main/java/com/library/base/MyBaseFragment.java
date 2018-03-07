@@ -14,7 +14,6 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +26,9 @@ import com.github.androidtools.inter.MyOnClickListener;
 import com.github.baseclass.BaseDividerListItem;
 import com.github.baseclass.adapter.LoadMoreAdapter;
 import com.github.baseclass.fragment.IBaseFragment;
-import com.github.baseclass.rx.MySubscriber;
+import com.github.baseclass.permission.PermissionCallback;
 import com.github.baseclass.rx.RxBus;
 import com.library.R;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -70,7 +68,6 @@ public abstract class MyBaseFragment extends IBaseFragment implements View.OnCli
     protected Unbinder mUnBind;
     protected String TAG=this.getClass().getSimpleName();
     protected ProgressLayout pl_load;
-    protected RxPermissions rxPermissions;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,27 +130,6 @@ public abstract class MyBaseFragment extends IBaseFragment implements View.OnCli
             isStop =false;
             myReStart();
         }
-    }
-    protected void requestPermission(final PermissionCallback callback,final String... permission){
-        requestPermission(null,callback,permission);
-    }
-    protected void requestPermission(final String showStr,final PermissionCallback callback,final String... permission){
-        if(rxPermissions==null){
-            rxPermissions=new RxPermissions(getActivity());
-        }
-        rxPermissions.request(permission).subscribe(new MySubscriber<Boolean>() {
-            @Override
-            public void onMyNext(Boolean granted) {
-                if(granted){
-                    callback.granted();
-                }else {
-                    if(!TextUtils.isEmpty(showStr)){
-                        showMsg(showStr);
-                    }
-                    callback.noGranted();
-                }
-            }
-        });
     }
     public void showProgress(){
         if (pl_load != null) {
@@ -288,14 +264,14 @@ public abstract class MyBaseFragment extends IBaseFragment implements View.OnCli
     public String takePhotoImgSavePath ="";
     //拍照
     private void takePhoto() {
-        takePhoto("没有授权,无法拍照");
+        takePhoto("没有全部授权,无法拍照");
     }
     private void takePhoto(final String showStr) {
         /*if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.CAMERA}, 1);
         } else {
         }*/
-        requestPermission(showStr,new PermissionCallback() {
+        /*requestPermission(showStr,new PermissionCallback() {
             @Override
             public void granted() {
                 startTakePhoto();
@@ -303,7 +279,17 @@ public abstract class MyBaseFragment extends IBaseFragment implements View.OnCli
             @Override
             public void noGranted() {
             }
-        },Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        },Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);*/
+        requestPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                startTakePhoto();
+            }
+            @Override
+            public void onDenied(String permission) {
+                showMsg("没有全部授权,无法拍照");
+            }
+        });
     }
 
     private void startTakePhoto() {

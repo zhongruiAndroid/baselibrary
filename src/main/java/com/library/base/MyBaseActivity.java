@@ -38,12 +38,11 @@ import com.github.androidtools.inter.MyOnClickListener;
 import com.github.baseclass.BaseDividerListItem;
 import com.github.baseclass.activity.IBaseActivity;
 import com.github.baseclass.adapter.LoadMoreAdapter;
+import com.github.baseclass.permission.PermissionCallback;
 import com.github.baseclass.rx.IOCallBack;
-import com.github.baseclass.rx.MySubscriber;
 import com.library.BuildConfig;
 import com.library.R;
 import com.library.base.tools.CacheUtils;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -85,7 +84,6 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
     protected boolean isStop;
     protected boolean noSetTheme;
     protected ProgressLayout pl_load;
-    protected RxPermissions rxPermissions;
     /****************************************************/
     protected abstract int getContentView();
 
@@ -107,7 +105,6 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
     @Override
     protected void onStop() {
         super.onStop();
-        rxPermissions=null;
         isStop =true;
     }
     @Override
@@ -117,27 +114,6 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
             isStop =false;
             myReStart();
         }
-    }
-    protected void requestPermission(final PermissionCallback callback,final String... permission){
-        requestPermission(null,callback,permission);
-    }
-    protected void requestPermission(final String showStr,final PermissionCallback callback,final String... permission){
-        if(rxPermissions==null){
-            rxPermissions=new RxPermissions(this);
-        }
-        rxPermissions.request(permission).subscribe(new MySubscriber<Boolean>() {
-            @Override
-            public void onMyNext(Boolean granted) {
-                if(granted){
-                    callback.granted();
-                }else {
-                    if(!TextUtils.isEmpty(showStr)){
-                        showMsg(showStr);
-                    }
-                    callback.noGranted();
-                }
-            }
-        });
     }
     protected void hiddenBottomLine() {
         hiddenBottomLine = true;
@@ -524,14 +500,14 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
     public String takePhotoImgSavePath ="";
     //拍照
     private void takePhoto() {
-        takePhoto("没有授权,无法拍照");
+        takePhoto("没有全部授权,无法拍照");
     }
     private void takePhoto(final String showStr) {
         /*if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.CAMERA}, 1);
         } else {
         }*/
-        requestPermission(showStr,new PermissionCallback() {
+      /*  requestPermission(showStr,new PermissionCallback() {
             @Override
             public void granted() {
                 startTakePhoto();
@@ -539,7 +515,17 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
             @Override
             public void noGranted() {
             }
-        },Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        },Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE);*/
+      requestPermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionCallback() {
+          @Override
+          public void onGranted() {
+              startTakePhoto();
+          }
+          @Override
+          public void onDenied(String permission) {
+            showMsg("没有全部授权,无法拍照");
+          }
+      });
     }
 
     private void startTakePhoto() {
