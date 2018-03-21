@@ -21,3 +21,6 @@ logcat正则表达式
 过滤log
 ^(?!.*(System.|CubicBezierInterpolator)).*$
 
+
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.5.1'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.0'

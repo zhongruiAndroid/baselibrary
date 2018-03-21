@@ -47,7 +47,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:26.+'
 
-    compile(name: 'mylibrary', ext: 'aar')
+    compile(name: 'myrefresh', ext: 'aar')
     compile(name: 'baseclass', ext: 'aar')
     compile(name: 'androidutils', ext: 'aar')
 //    compile(name: 'retrofitutil', ext: 'aar')
