@@ -25,9 +25,9 @@ import com.github.androidtools.ClickUtils;
 import com.github.androidtools.inter.MyOnClickListener;
 import com.github.baseclass.BaseDividerListItem;
 import com.github.baseclass.adapter.LoadMoreAdapter;
+import com.github.baseclass.adapter.MyLoadMoreAdapter;
 import com.github.baseclass.fragment.IBaseFragment;
 import com.github.baseclass.permission.PermissionCallback;
-import com.github.baseclass.rx.RxBus;
 import com.library.R;
 
 import java.io.File;
@@ -46,7 +46,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
  * Created by Administrator on 2017/7/13.
  */
 
-public abstract class MyBaseFragment extends IBaseFragment implements View.OnClickListener,ProgressLayout.OnAgainInter,LoadMoreAdapter.OnLoadMoreListener{
+public abstract class MyBaseFragment extends IBaseFragment implements View.OnClickListener,ProgressLayout.OnAgainInter,LoadMoreAdapter.OnLoadMoreListener,MyLoadMoreAdapter.OnLoadMoreListener{
     protected int pageNum=2;
     protected int pageSize=20;
     protected int pagesize = 20;
@@ -172,7 +172,6 @@ public abstract class MyBaseFragment extends IBaseFragment implements View.OnCli
     public void onDestroy() {
         super.onDestroy();
         mUnBind.unbind();
-        RxBus.getInstance().removeAllStickyEvents();
     }
     @Override
     public void loadMore() {

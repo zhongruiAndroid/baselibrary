@@ -18,6 +18,7 @@
         <item name="android:textColor">@color/colorText</item>
         <!--<item name="android:textCursorDrawable">@drawable/cursor_color</item>&lt;!&ndash;光标颜色&ndash;&gt;-->
         <item name="android:editTextStyle">@style/editTextStyle</item>
+        <item name="android:textColorHint">@color/app_hint_color</item>
         <!--<item name="android:listDivider">@drawable/app_list_divider</item>-->
     </style>
     <style name="editTextStyle" parent="@style/Base.V7.Widget.AppCompat.EditText">

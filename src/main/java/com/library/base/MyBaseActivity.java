@@ -38,8 +38,9 @@ import com.github.androidtools.inter.MyOnClickListener;
 import com.github.baseclass.BaseDividerListItem;
 import com.github.baseclass.activity.IBaseActivity;
 import com.github.baseclass.adapter.LoadMoreAdapter;
+import com.github.baseclass.adapter.MyLoadMoreAdapter;
 import com.github.baseclass.permission.PermissionCallback;
-import com.github.baseclass.rx.IOCallBack;
+import com.github.rxbus.rxjava.MyFlowableSubscriber;
 import com.library.BuildConfig;
 import com.library.R;
 import com.library.base.tools.CacheUtils;
@@ -54,14 +55,15 @@ import butterknife.ButterKnife;
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
-import rx.Subscriber;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.annotations.NonNull;
 
 
 /**
  * Created by Administrator on 2017/6/1.
  */
 
-public abstract class MyBaseActivity extends IBaseActivity implements ProgressLayout.OnAgainInter, View.OnClickListener, LoadMoreAdapter.OnLoadMoreListener {
+public abstract class MyBaseActivity extends IBaseActivity implements ProgressLayout.OnAgainInter, View.OnClickListener, LoadMoreAdapter.OnLoadMoreListener,MyLoadMoreAdapter.OnLoadMoreListener {
     protected final String TAG=this.getClass().getSimpleName();
     /*************************************************/
     protected NestedScrollView nsv;
@@ -147,8 +149,10 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
 
             app_right_tv.setVisibility(View.GONE);
             app_right_iv.setVisibility(View.VISIBLE);
+            app_right_iv.setOnClickListener(this);
         }
     }
+
 
     public void setNoSetTheme(boolean noSetTheme) {
         this.noSetTheme = noSetTheme;
@@ -418,26 +422,27 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
         deleteCache(null,false);
     }
     public void deleteCache(final TextView textView,final boolean isAllCache) {
-        RXStart(new IOCallBack<String>() {
+        RXStart(new MyFlowableSubscriber<String>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
+            public void subscribe(@NonNull FlowableEmitter<String> emitter) {
                 CacheUtils.clearAllCache(getApplicationContext());
                 try {
                     String totalCacheSize = isAllCache?CacheUtils.getTotalCacheSize(getApplicationContext()):CacheUtils.getExternalCacheSize(getApplicationContext());
-                    subscriber.onNext(totalCacheSize);
-                    subscriber.onCompleted();
+                    emitter.onNext(totalCacheSize);
+                    emitter.onComplete();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             @Override
-            public void onMyNext(String totalCacheSize) {
+            public void onNext(String totalCacheSize) {
                 showMsg("清除成功");
                 if(textView!=null){
                     textView.setText(totalCacheSize);
                 }
             }
         });
+
 
     }
 

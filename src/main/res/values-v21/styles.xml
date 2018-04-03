@@ -8,6 +8,7 @@
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:editTextStyle">@style/editTextStyle</item>
         <item name="android:textSize">@dimen/app_text_size</item>
+        <item name="android:textColorHint">@color/app_hint_color</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 

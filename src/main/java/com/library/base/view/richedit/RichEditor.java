@@ -145,7 +145,7 @@ public class RichEditor extends WebView {
 
   private void applyAttributes(Context context, AttributeSet attrs) {
     final int[] attrsArray = new int[] {
-        android.R.attr.gravity
+            android.R.attr.gravity
     };
     TypedArray ta = context.obtainStyledAttributes(attrs, attrsArray);
 
@@ -206,7 +206,7 @@ public class RichEditor extends WebView {
   @Override public void setPadding(int left, int top, int right, int bottom) {
     super.setPadding(left, top, right, bottom);
     exec("javascript:RE.setPadding('" + left + "px', '" + top + "px', '" + right + "px', '" + bottom
-        + "px');");
+            + "px');");
   }
 
   @Override public void setPaddingRelative(int start, int top, int end, int bottom) {
@@ -260,14 +260,14 @@ public class RichEditor extends WebView {
 
   public void loadCSS(String cssFile) {
     String jsCSSImport = "(function() {" +
-        "    var head  = document.getElementsByTagName(\"head\")[0];" +
-        "    var link  = document.createElement(\"link\");" +
-        "    link.rel  = \"stylesheet\";" +
-        "    link.type = \"text/css\";" +
-        "    link.href = \"" + cssFile + "\";" +
-        "    link.media = \"all\";" +
-        "    head.appendChild(link);" +
-        "}) ();";
+            "    var head  = document.getElementsByTagName(\"head\")[0];" +
+            "    var link  = document.createElement(\"link\");" +
+            "    link.rel  = \"stylesheet\";" +
+            "    link.type = \"text/css\";" +
+            "    link.href = \"" + cssFile + "\";" +
+            "    link.media = \"all\";" +
+            "    head.appendChild(link);" +
+            "}) ();";
     exec("javascript:" + jsCSSImport + "");
   }
 
@@ -364,7 +364,14 @@ public class RichEditor extends WebView {
     exec("javascript:RE.setNumbers();");
   }
 
+  private boolean firstAddImg=true;
   public void insertImage(String url, String alt) {
+    if (firstAddImg) {
+      firstAddImg = false;
+      if (!isFocused()) {
+        focusEditor();
+      }
+    }
     exec("javascript:RE.prepareInsert();");
     exec("javascript:RE.insertImage('" + url + "', '" + alt + "');");
   }

@@ -13,6 +13,15 @@ public class BaseObj implements Serializable {
     private String img;//上传图片返回路径
     private int is_check;//首页是否有未读消息、是否有红点(1有 0无)
     private String card_id;//添加信用卡发短信返回card_id
+    private String user_agreement;//用户协议
+
+    public String getUser_agreement() {
+        return user_agreement;
+    }
+
+    public void setUser_agreement(String user_agreement) {
+        this.user_agreement = user_agreement;
+    }
 
     public String getCard_id() {
         return card_id;
