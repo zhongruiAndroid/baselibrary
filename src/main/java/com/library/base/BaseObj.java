@@ -14,6 +14,15 @@ public class BaseObj implements Serializable {
     private int is_check;//首页是否有未读消息、是否有红点(1有 0无)
     private String card_id;//添加信用卡发短信返回card_id
     private String user_agreement;//用户协议
+    protected int message_sink;//消息设置1：开，0：关
+
+    public int getMessage_sink() {
+        return message_sink;
+    }
+
+    public void setMessage_sink(int message_sink) {
+        this.message_sink = message_sink;
+    }
 
     public String getUser_agreement() {
         return user_agreement;

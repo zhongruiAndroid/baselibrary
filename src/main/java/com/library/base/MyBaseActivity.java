@@ -76,6 +76,8 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
     private String appTitle, appRightTitle;
     private int appTitleColor, appRightTitleColor;
     private int appRightImg;
+    //临时变量处理分享
+    protected boolean isShareImg;
     private int titleBackgroud = R.color.app_bar;
 //    private int statusBarBackgroud = R.color.app_bar;
     protected TextView app_title, app_right_tv;
@@ -150,6 +152,9 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
             app_right_tv.setVisibility(View.GONE);
             app_right_iv.setVisibility(View.VISIBLE);
             app_right_iv.setOnClickListener(this);
+            if(isShareImg){
+                app_right_iv.setTag("share");
+            }
         }
     }
 
@@ -258,6 +263,10 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
                 app_right_tv.setVisibility(View.GONE);
             }
             app_right_iv.setVisibility(View.VISIBLE);
+            app_right_iv.setOnClickListener(this);
+            if(isShareImg){
+                app_right_iv.setTag("share");
+            }
         }
         if (appRightTitle != null) {
             app_right_tv.setText(appRightTitle);
@@ -481,9 +490,18 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
         selectPhotoDialog.show();
     }
     //选择相册
-    private void selectPhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, result_select_photo);
+    protected void selectPhoto() {
+        requestPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, result_select_photo);
+            }
+            @Override
+            public void onDenied(String s) {
+                showMsg("获取权限失败无法正常获取图片");
+            }
+        });
     }
     protected String getSelectPhotoPath(Uri uri){
         Cursor cursor = getContentResolver().query(uri, null, null, null,null);
@@ -504,8 +522,17 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
     }
     public String takePhotoImgSavePath ="";
     //拍照
-    private void takePhoto() {
-        takePhoto("没有全部授权,无法拍照");
+    protected void takePhoto() {
+        requestPermission(new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                takePhoto("没有全部授权,无法拍照");
+            }
+            @Override
+            public void onDenied(String s) {
+                showMsg("获取权限失败无法正常拍照");
+            }
+        });
     }
     private void takePhoto(final String showStr) {
         /*if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
