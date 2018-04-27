@@ -2,6 +2,7 @@ package com.library.base;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -28,6 +29,7 @@ import com.github.baseclass.adapter.LoadMoreAdapter;
 import com.github.baseclass.adapter.MyLoadMoreAdapter;
 import com.github.baseclass.fragment.IBaseFragment;
 import com.github.baseclass.permission.PermissionCallback;
+import com.github.baseclass.view.MyDialog;
 import com.library.R;
 
 import java.io.File;
@@ -326,5 +328,62 @@ public abstract class MyBaseFragment extends IBaseFragment implements View.OnCli
         Uri uri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         startActivityForResult(intent, result_take_photo);
+    }
+
+    public void requestPermission(String permission,final PermissionCallback callback){
+        super.requestPermission(permission, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                callback.onGranted();
+            }
+            @Override
+            public void onDenied(String s) {
+                callback.onDenied(s);
+                showDialog();
+            }
+        });
+    }
+    public void requestPermission(String[]permission,final PermissionCallback callback){
+        super.requestPermission(permission, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                callback.onGranted();
+            }
+            @Override
+            public void onDenied(String s) {
+                callback.onDenied(s);
+                showDialog();
+            }
+        });
+    }
+    private void showDialog(){
+        MyDialog.Builder mDialog=new MyDialog.Builder(mContext);
+        mDialog.setMessage("无法获取相关权限,会导致部分功能无法使用,是否去设置?");
+        mDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mDialog.setPositiveButton("去设置",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                openPhoneSetting();
+            }
+        });
+        mDialog.create().show();
+    }
+    protected void openPhoneSetting() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", mContext.getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", mContext.getPackageName());
+        }
     }
 }

@@ -2,10 +2,12 @@ package com.library.base;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -40,6 +42,7 @@ import com.github.baseclass.activity.IBaseActivity;
 import com.github.baseclass.adapter.LoadMoreAdapter;
 import com.github.baseclass.adapter.MyLoadMoreAdapter;
 import com.github.baseclass.permission.PermissionCallback;
+import com.github.baseclass.view.MyDialog;
 import com.github.rxbus.rxjava.MyFlowableSubscriber;
 import com.library.BuildConfig;
 import com.library.R;
@@ -165,6 +168,9 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
 
     public void setTitleBackgroud(@ColorRes int titleBackgroud) {
         this.titleBackgroud = titleBackgroud;
+        if(toolbar!=null){
+            toolbar.setBackgroundColor(ContextCompat.getColor(mContext, titleBackgroud));
+        }
     }
 
  /*   public void setStatusBarBackgroud(@ColorRes int statusBarBackgroud) {
@@ -596,5 +602,135 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         startActivityForResult(intent, result_take_photo);
     }
+    /**
+     * 视图是否可见
+     * @param view
+     * @return
+     */
+    public boolean keJian(View view){
+        Point p=new Point();
+        getWindowManager().getDefaultDisplay().getSize(p);
+        int screenWidth=p.x;
+        int screenHeight=p.y;
 
+        Rect rect=new Rect(0,0,screenWidth,screenHeight );
+
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+//        System.out.println(Arrays.toString(location));
+//        Log("==="+ Arrays.toString(location));
+        // Rect ivRect=new Rect(imageView.getLeft(),imageView.getTop(),imageView.getRight(),imageView.getBottom());
+        if (view.getLocalVisibleRect(rect)) {/*rect.contains(ivRect)*/
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public int[] getViewLocation(View view){
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        return location;
+    }
+    public interface OnScrollAutoSelectViewInter{
+        void selectViewPosition(int position,View view);
+    }
+    protected void scrollCheckViewIsShow(NestedScrollView nsv, final List<View>list){
+        scrollCheckViewIsShow(nsv,list,null);
+    }
+    protected void scrollCheckViewIsShow(NestedScrollView nsv, final List<View>list,final OnScrollAutoSelectViewInter inter){
+        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(isEmpty(list)){
+                    return;
+                }
+                for (int i = 0; i < list.size(); i++) {
+                    if(keJian(list.get(i))){
+                        if(inter!=null){
+                            inter.selectViewPosition(i,list.get(i));
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+    }
+    protected void scrollAutoSelectView(NestedScrollView nsv,View view){
+        nsv.smoothScrollTo(0,view.getTop());
+        //- PhoneUtils.dip2px(mContext,barHeight)
+    }
+
+    protected void scrollChangeBackground(NestedScrollView nsv,final View view){
+        view.getBackground().mutate().setAlpha(0);
+        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            int screenWidth = PhoneUtils.getScreenWidth(mContext)*2/3;
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY >= 0 && scrollY <= screenWidth) {
+                    double alpha = (double) scrollY / screenWidth;
+                    view.getBackground().mutate().setAlpha((int) (alpha * 255));
+                } else {
+                    view.getBackground().mutate().setAlpha(255);
+                }
+            }
+        });
+    }
+
+
+    public void requestPermission(String permission,final PermissionCallback callback){
+        super.requestPermission(permission, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                callback.onGranted();
+            }
+            @Override
+            public void onDenied(String s) {
+                callback.onDenied(s);
+                showDialog();
+            }
+        });
+    }
+    public void requestPermission(String[]permission,final PermissionCallback callback){
+        super.requestPermission(permission, new PermissionCallback() {
+            @Override
+            public void onGranted() {
+                callback.onGranted();
+            }
+            @Override
+            public void onDenied(String s) {
+                callback.onDenied(s);
+                showDialog();
+            }
+        });
+    }
+    private void showDialog(){
+        MyDialog.Builder mDialog=new MyDialog.Builder(mContext);
+        mDialog.setMessage("无法获取相关权限,会导致部分功能无法使用,是否去设置?");
+        mDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mDialog.setPositiveButton("去设置",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                openPhoneSetting();
+            }
+        });
+        mDialog.create().show();
+    }
+    protected void openPhoneSetting() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", mContext.getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", mContext.getPackageName());
+        }
+    }
 }
