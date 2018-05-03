@@ -686,7 +686,7 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
             @Override
             public void onDenied(String s) {
                 callback.onDenied(s);
-                showDialog();
+                showDialog(s);
             }
         });
     }
@@ -699,24 +699,38 @@ public abstract class MyBaseActivity extends IBaseActivity implements ProgressLa
             @Override
             public void onDenied(String s) {
                 callback.onDenied(s);
-                showDialog();
+                showDialog(s);
             }
         });
     }
-    private void showDialog(){
+    private String permissionStr=",请在手机应用权限管理中开启权限";
+    private void showDialog(String permission){
+        String str="无法获取相关权限,请在手机应用权限管理中开启权限";
+        switch (permission){
+            case Manifest.permission.CAMERA:
+                str="摄像头启动失败"+permissionStr;
+                break;
+            case Manifest.permission.READ_EXTERNAL_STORAGE:
+                str="无法获取手机文件"+permissionStr;
+                break;
+            case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                str="应用无法保存文件"+permissionStr;
+                break;
+        }
         MyDialog.Builder mDialog=new MyDialog.Builder(mContext);
-        mDialog.setMessage("无法获取相关权限,会导致部分功能无法使用,是否去设置?");
-        mDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+        mDialog.setMessage(str);
+//        mDialog.setNegativeButton(new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+        mDialog.setPositiveButton("确定",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-            }
-        });
-        mDialog.setPositiveButton("去设置",new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                openPhoneSetting();
+//                JumpPermission.GoToSetting(mContext);
+//                openPhoneSetting();
             }
         });
         mDialog.create().show();
