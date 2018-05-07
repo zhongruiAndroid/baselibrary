@@ -8,6 +8,7 @@ import com.github.baseclass.view.Loading;
 import com.github.retrofitutil.NoNetworkException;
 
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import retrofit2.Call;
@@ -104,7 +105,9 @@ public abstract class ResCallBack<T> implements Callback<ResponseObj<T>> {
     public void onFailure(Call<ResponseObj<T>> call, Throwable t) {
         if (t instanceof ConnectException) {
             onError(new ServerException("服务器开小差去了,请稍后再试"));
-        } else {
+        } else if(t instanceof SocketTimeoutException){
+            onError(new ServerException("服务器连接超时,请稍后再试"));
+        }else {
             onError(t);
         }
     }
